@@ -2,6 +2,7 @@ package com.example.xiyouquery.login.service.impl
 
 import com.example.xiyouquery.base.data.net.RetrofitFactory
 import com.example.xiyouquery.login.data.api.LoginApi
+import com.example.xiyouquery.login.data.protocol.StudentInfo
 import com.example.xiyouquery.login.service.UserService
 import okhttp3.ResponseBody
 import rx.Observable
@@ -21,6 +22,8 @@ class UserServiceImpl : UserService {
                 "lbLanguage" to "",
                 "hidPdrs" to "",
                 "hidsc" to "")
+
+        StudentInfo.id = id
 
         return RetrofitFactory.instance.create(LoginApi::class.java)
                 .login(map)

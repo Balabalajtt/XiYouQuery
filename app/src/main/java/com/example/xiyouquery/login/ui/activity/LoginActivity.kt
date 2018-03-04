@@ -1,10 +1,12 @@
 package com.example.xiyouquery.login.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import com.example.xiyouquery.R
 import com.example.xiyouquery.base.ui.activity.BaseMvpActivity
 import com.example.xiyouquery.login.presenter.LoginPresenter
 import com.example.xiyouquery.login.presenter.view.LoginView
+import com.example.xiyouquery.main.ui.activity.MainActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.toast
@@ -31,9 +33,10 @@ class LoginActivity : BaseMvpActivity<LoginPresenter>(), LoginView {
 
     }
 
-    override fun onLoginResult(result: Boolean, type: Int) {
-        toast("请求成功" + result + type)
+    override fun onLoginResult(result: Boolean, message: String) {
+        toast(message)
+        if (result) {
+            startActivity(Intent(this, MainActivity::class.java))
+        }
     }
-
-
 }

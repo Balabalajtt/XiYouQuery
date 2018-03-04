@@ -2,9 +2,7 @@ package com.example.xiyouquery.login.data.api
 
 import com.example.xiyouquery.base.common.Constant.LOGIN_POST_URL
 import okhttp3.ResponseBody
-import retrofit2.http.FieldMap
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 import rx.Observable
 
 /**
@@ -13,6 +11,9 @@ import rx.Observable
 interface LoginApi {
     @FormUrlEncoded
     @POST(LOGIN_POST_URL)
-    fun login(@FieldMap map: Map<String, String>) : Observable<ResponseBody>
+    @Headers("Content-Type: application/x-www-form-urlencoded",
+            "Referer: http://222.24.62.120/"
+            )
+    fun login(@FieldMap map: Map<String, String>): Observable<ResponseBody>
 
 }
