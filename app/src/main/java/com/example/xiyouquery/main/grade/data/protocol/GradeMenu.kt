@@ -6,4 +6,6 @@ package com.example.xiyouquery.main.grade.data.protocol
 object GradeMenu {
     var year: List<String> = arrayListOf()
     var term: List<String> = arrayListOf()
+
+    var semester: ArrayList<String> = arrayListOf()
 }

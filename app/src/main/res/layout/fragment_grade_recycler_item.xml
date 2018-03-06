@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginTop="4dp"
+    app:cardCornerRadius="4dp"
+    app:elevation="1dp">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp">
+
+        <TextView
+            android:id="@+id/mNameTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:hint="课程名称"/>
+
+        <TextView
+            android:id="@+id/mPropertyTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/mNameTv"
+            android:layout_alignBottom="@id/mNameTv"
+            android:hint="课程性质"/>
+
+        <TextView
+            android:id="@+id/mGradeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mNameTv"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"
+            android:hint="成绩"/>
+
+
+        <TextView
+            android:id="@+id/mCreditTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mGradeTv"
+            android:layout_marginTop="8dp"
+            android:hint="课程学分"/>
+
+        <TextView
+            android:id="@+id/mPointTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:hint="绩点"
+            android:layout_toRightOf="@id/mCreditTv"
+            android:layout_marginTop="8dp"
+            android:layout_below="@id/mGradeTv"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

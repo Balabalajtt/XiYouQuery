@@ -10,12 +10,12 @@ import com.example.xiyouquery.R
 import com.example.xiyouquery.base.ui.fragement.BaseMvpFragment
 import com.example.xiyouquery.main.grade.presenter.GradePresenter
 import com.example.xiyouquery.main.grade.presenter.view.GradeView
-import org.jetbrains.anko.support.v4.toast
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.LinearLayoutManager
 import com.example.xiyouquery.main.grade.data.protocol.GradeList
 import com.example.xiyouquery.main.grade.data.protocol.GradeMenu
 import kotlinx.android.synthetic.main.fragment_grade.*
-import org.jetbrains.anko.sdk25.coroutines.onClick
+import org.jetbrains.anko.sdk25.coroutines.onLongClick
 
 
 /**
@@ -24,8 +24,10 @@ import org.jetbrains.anko.sdk25.coroutines.onClick
 class GradeFragment : BaseMvpFragment<GradePresenter>(), GradeView {
 
     private lateinit var fgContext: Context
-    private var yearNum = 1
+    private lateinit var adapter: GradeRVAdapter
+    private var yearNum = 0
     private var termNum = 0
+    private var semesterNum = 0
 
     fun getGradeFragment(context: Context) : GradeFragment {
         fgContext = context
@@ -47,47 +49,46 @@ class GradeFragment : BaseMvpFragment<GradePresenter>(), GradeView {
         super.onViewCreated(view, savedInstanceState)
         mPresenter.getGradeMenu()
 
+        adapter = GradeRVAdapter(fgContext)
+        mRecyclerView.layoutManager = LinearLayoutManager(fgContext)
+        mRecyclerView.adapter = adapter
+
     }
 
     override fun onGetGradeMenuResult() {
-        toast("on get grade menu result")
-        mXNBt.text = GradeMenu.year[yearNum]
-        mXNBt.onClick {
-            showDialog(GradeMenu.year, "请选择学年",
+        mTimeTv.text = "${GradeMenu.year[yearNum]}学年 第${GradeMenu.term[termNum]}学期"
+        mTimeTv.onLongClick {
+            showDialog(GradeMenu.semester, "请选择学期",
                     DialogInterface.OnClickListener { _, i ->
-                        yearNum = i
-                        mXNBt.text = GradeMenu.year[yearNum]
+                        semesterNum = i
+                        yearNum = i / 2
+                        termNum = 1 - i % 2
+                        mTimeTv.text = "${GradeMenu.year[yearNum]}学年 第${GradeMenu.term[termNum]}学期"
+                        mPresenter.getGrade(GradeMenu.year[yearNum], GradeMenu.term[termNum])
                     },  fgContext)
         }
-        mXQBt.text = GradeMenu.term[termNum]
-        mXQBt.onClick {
-            showDialog(GradeMenu.term, "请选择学期",
-                    DialogInterface.OnClickListener { _, i ->
-                        termNum = i
-                        mXQBt.text = GradeMenu.term[termNum]
-                    }, fgContext)
-        }
-        mQueryBt.onClick {
-            mPresenter.getGrade(mXNBt.text.toString(), mXQBt.text.toString())
-        }
 
-
+        mPresenter.getGrade(GradeMenu.year[yearNum], GradeMenu.term[termNum])
 
     }
 
     override fun onGetGradeResult() {
 
         var grade = ""
-        for(g in GradeList.allGrade) {
-            grade += "${g.toString()} \n"
-        }
-        if (grade == "") {
+        if (GradeList.allGrade.isEmpty()) {
             grade = "本学期暂时没有成绩"
         }
         if (GradeMenu.term.isEmpty() && GradeMenu.year.isEmpty()) {
             grade = "请先评价"
         }
-        mTx.text = grade
+        if (grade != "") {
+            mTx.text = grade
+            mTx.visibility = View.VISIBLE
+        } else {
+            mTx.visibility = View.GONE
+        }
+
+        adapter.notifyDataSetChanged()
     }
 
 

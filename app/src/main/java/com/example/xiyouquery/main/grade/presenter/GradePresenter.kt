@@ -24,7 +24,6 @@ class GradePresenter : BasePresenter<GradeView>() {
         GradeServiceImpl().getGradeMenu(StudentInfo.id, StudentInfo.name)
                 .execute(object : BaseSubscriber<ResponseBody>() {
                     override fun onNext(t: ResponseBody) {
-//                        Log.d("aaaaaa", "熏肉咸${t.string()}")
                         parseGradeMenu(t.string())
                         mView.onGetGradeMenuResult()
                     }
@@ -41,6 +40,14 @@ class GradePresenter : BasePresenter<GradeView>() {
 
         GradeMenu.year = doc.select("[name=ddlXN][id=ddlXN]")[0].text().split(" ")
         GradeMenu.term = doc.select("[name=ddlXQ][id=ddlXQ]")[0].text().split(" ")
+
+        var count = GradeMenu.year.size
+        while (count > 0) {
+            GradeMenu.semester.add("大$count 第2学期")
+            GradeMenu.semester.add("大$count 第1学期")
+//            GradeMenu.semester.add("$i 学年 第3学期")
+            count--
+        }
 
     }
 

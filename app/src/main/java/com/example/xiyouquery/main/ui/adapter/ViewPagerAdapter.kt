@@ -22,4 +22,5 @@ class ViewPagerAdapter(manager: FragmentManager, private val titles: ArrayList<S
     override fun getCount(): Int {
         return titles.size
     }
+
 }

@@ -1,6 +1,7 @@
 package com.example.xiyouquery.login.presenter
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -23,8 +24,32 @@ import org.jsoup.nodes.Document
  * Created by 江婷婷 on 2018/2/10.
  */
 class LoginPresenter : BasePresenter<LoginView>() {
-    fun login(id: String, pwd: String, checkCode: String) {
 
+    fun getLocalAccount(context: Context) : ArrayList<String> {
+        val pref = context.getSharedPreferences("account", 0)
+        return if (pref.getBoolean("isRemember", false)) {
+            arrayListOf(pref.getString("id", ""), pref.getString("pwd", ""))
+        } else {
+            arrayListOf()
+        }
+
+    }
+
+    fun saveAccount(id: String, pwd: String, context: Context) {
+        val editor = context.getSharedPreferences("account", 0).edit()
+        editor.putBoolean("isRemember", true)
+        editor.putString("id", id)
+        editor.putString("pwd", pwd)
+        editor.apply()
+    }
+
+    fun deleteAccount(context: Context) {
+        val editor = context.getSharedPreferences("account", 0).edit()
+        editor.putBoolean("isRemember", false)
+        editor.apply()
+    }
+
+    fun login(id: String, pwd: String, checkCode: String) {
         UserServiceImpl().login(id, pwd, checkCode)
                 .execute(object : BaseSubscriber<ResponseBody>() {
                     override fun onNext(t: ResponseBody) {
@@ -51,7 +76,6 @@ class LoginPresenter : BasePresenter<LoginView>() {
             StudentInfo.name = ""
             LoginStatus.status = false
             LoginStatus.message = message
-//            Log.d("aaaaaaaaaaaa", message)
         }
 
     }
