@@ -45,7 +45,8 @@ class CurriculumFragment : BaseMvpFragment<CurriculumPresenter>(), CurriculumVie
 
     }
 
-    override fun onGetInit() {
+    override fun onGetInit(allCurriculum: ArrayList<String>) {
+        adapter.setData(allCurriculum)
         adapter.notifyDataSetChanged()
     }
 

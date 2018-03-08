@@ -12,6 +12,7 @@ import com.example.xiyouquery.zf.presenter.GradePresenter
 import com.example.xiyouquery.zf.presenter.view.GradeView
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import com.example.xiyouquery.zf.data.protocol.Grade
 import com.example.xiyouquery.zf.ui.adapter.GradeRVAdapter
 import kotlinx.android.synthetic.main.fragment_grade.*
 import org.jetbrains.anko.sdk25.coroutines.onLongClick
@@ -76,10 +77,13 @@ class GradeFragment : BaseMvpFragment<GradePresenter>(), GradeView {
     override fun onGradeError(message: String) {
         mTx.visibility = View.VISIBLE
         mTx.text = message
+        adapter.setData(arrayListOf())
+        adapter.notifyDataSetChanged()
     }
 
-    override fun onNotifyGrade() {
+    override fun onNotifyGrade(grades: ArrayList<Grade>) {
         mTx.visibility = View.GONE
+        adapter.setData(grades)
         adapter.notifyDataSetChanged()
     }
 

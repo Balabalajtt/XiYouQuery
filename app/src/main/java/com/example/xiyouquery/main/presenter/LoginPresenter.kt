@@ -17,6 +17,8 @@ import com.example.xiyouquery.main.service.impl.UserServiceImpl
 import okhttp3.ResponseBody
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import rx.Observable
+import rx.functions.Func1
 
 /**
  * Created by 江婷婷 on 2018/2/10.
@@ -58,31 +60,25 @@ class LoginPresenter : BasePresenter<LoginView>() {
 
     fun login(id: String, pwd: String, checkCode: String) {
         UserServiceImpl().login(id, pwd, checkCode)
-                .execute(object : BaseSubscriber<ResponseBody>() {
-                    override fun onNext(t: ResponseBody) {
-                        parseLoginResponse(t.string())
-                        mView.onLoginResult(LoginStatus.status, LoginStatus.message)
+                .flatMap(Func1<ResponseBody, Observable<LoginStatus>> { t ->
+                    val doc: Document = Jsoup.parse(t.string())
+                    val title = doc.getElementsByTag("title").text()
+                    if (title == "正方教务管理系统") {
+                        StudentInfo.name = doc.getElementById("xhxm").text()
+                        return@Func1 Observable.just(LoginStatus(true, "${StudentInfo.name}你好"))
+                    } else {
+                        val script = doc.getElementsByTag("script")[1].data().toString()
+                        val message = script.substring(script.indexOf("('") + 2, script.indexOf("')"))
+                        StudentInfo.name = ""
+                        return@Func1 Observable.just(LoginStatus(false, message))
+                    }
+                })
+                .execute(object : BaseSubscriber<LoginStatus>() {
+                    override fun onNext(t: LoginStatus) {
+                        mView.onLoginResult(t.status, t.msg)
 
                     }
                 })
-    }
-
-    fun parseLoginResponse(response: String) {
-        val doc: Document = Jsoup.parse(response)
-
-        val title = doc.getElementsByTag("title").text()
-        if (title == "正方教务管理系统") {
-            StudentInfo.name = doc.getElementById("xhxm").text()
-            LoginStatus.status = true
-            LoginStatus.message = "${StudentInfo.name}，您好"
-        } else {
-            val script = doc.getElementsByTag("script")[1].data().toString()
-            val message = script.substring(script.indexOf("('") + 2, script.indexOf("')"))
-            StudentInfo.name = ""
-            LoginStatus.status = false
-            LoginStatus.message = message
-        }
-
     }
 
 }
